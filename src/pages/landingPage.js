@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './landingPage.css';
+import { ReactComponent as Framey } from '../images/frameyLanding.svg';
 
 const LandingPage = () => {
   return (
@@ -13,7 +14,7 @@ const LandingPage = () => {
         <Link to="/login">
           <button className="btn text">login</button>
         </Link>
-        <img src="../images/frameyLanding.svg" alt="Mascot image" width="384" height="326"/>
+        <Framey />
       </div>
     </div>
   );
