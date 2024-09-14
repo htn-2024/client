@@ -147,6 +147,7 @@ const MyForm = () => {
 
     setIsUploading(false);
     alert('Memory created successfully!');
+    window.location.href = '/gallery';
   };
 
 

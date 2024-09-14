@@ -38,18 +38,27 @@ const Gallery = () => {
     alert(`Delete tile with ID: ${id}`);
   };
 
+  const handleCreateMemory = () => {
+    window.location.href = '/create-memory';
+  };
+
   return (
-    <div style={styles.galleryContainer}>
-      {tilesData.map((tile) => (
-        <MemoryTile
-          key={tile.id}
-          title={tile.title}
-          description={tile.description}
-          image={tile.image}
-          onEdit={() => handleEdit(tile.id)}
-          onDelete={() => handleDelete(tile.id)}
-        />
-      ))}
+    <div style={styles.galleryPage}>
+      <button style={styles.createButton} onClick={handleCreateMemory}>
+        Create Memory
+      </button>
+      <div style={styles.galleryContainer}>
+        {tilesData.map((tile) => (
+          <MemoryTile
+            key={tile.id}
+            title={tile.title}
+            description={tile.description}
+            image={tile.image}
+            onEdit={() => handleEdit(tile.id)}
+            onDelete={() => handleDelete(tile.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
