@@ -5,6 +5,7 @@ const Gallery = () => {
   const [tilesData, setTilesData] = React.useState([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [editingTile, setEditingTile] = React.useState(null);
+  const [openDropdownId, setOpenDropdownId] = React.useState(null);
 
   // Fetch the tiles data from the server
   const getTilesData = React.useCallback(async () => {
@@ -55,6 +56,7 @@ const Gallery = () => {
         console.log("Memory updated successfully");
         setIsModalOpen(false);
         setEditingTile(null);
+        setOpenDropdownId(null);  // Close the dropdown
         // Re-fetch updated tiles data after the edit
         await getTilesData();
       } else {
@@ -64,6 +66,7 @@ const Gallery = () => {
       console.error("Error updating memory:", error);
     }
   };
+
 
   const handleDelete = async (id) => {
     try {
@@ -106,6 +109,8 @@ const Gallery = () => {
               fileLink={tile.fileLink}
               onEdit={() => handleEdit(tile)}
               onDelete={() => handleDelete(tile._id)}
+              isDropdownOpen={openDropdownId === tile._id}
+              setDropdownOpen={(isOpen) => setOpenDropdownId(isOpen ? tile._id : null)}
             />
           ))
         ) : (
@@ -162,8 +167,23 @@ const Gallery = () => {
                 }
               />
               <br />
-              <button type="submit">Save</button>
-              <button type="button" onClick={() => setIsModalOpen(false)}>
+              <button 
+                type="submit"
+                onClick={async (e) => {
+                  await handleSubmit(e);
+                  setIsModalOpen(false);
+                  setEditingTile(null);
+                }}
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setEditingTile(null);
+                }}
+              >
                 Cancel
               </button>
             </form>
@@ -214,3 +234,4 @@ const styles = {
     borderRadius: "5px",
   },
 };
+

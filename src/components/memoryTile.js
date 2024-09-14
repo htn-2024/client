@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
-const MemoryTile = ({ title, description, image, audio, onEdit, onDelete }) => {
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+const MemoryTile = ({ title, description, image, audio, onEdit, onDelete, isDropdownOpen, setDropdownOpen }) => {
 
   const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
+    setDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -12,16 +11,16 @@ const MemoryTile = ({ title, description, image, audio, onEdit, onDelete }) => {
       <div style={styles.header}>
         <h3>{title}</h3>
         <div style={styles.dropdownContainer}>
-          <button onClick={toggleDropdown} style={styles.menuButton}>
-            &#8942; {/* Vertical ellipsis for menu button */}
-          </button>
-          {isDropdownVisible && (
-            <div style={styles.dropdown}>
-              <button onClick={onEdit} style={styles.dropdownItem}>Edit</button>
-              <button onClick={onDelete} style={styles.dropdownItem}>Delete</button>
-            </div>
-          )}
-        </div>
+        <button onClick={toggleDropdown} style={styles.menuButton}>
+          &#8942;
+        </button>
+        {isDropdownOpen && (
+          <div style={styles.dropdown}>
+            <button onClick={() => {onEdit(); setDropdownOpen(false);}} style={styles.dropdownItem}>Edit</button>
+            <button onClick={() => {onDelete(); setDropdownOpen(false);}} style={styles.dropdownItem}>Delete</button>
+          </div>
+        )}
+      </div>
       </div>
       <div style={styles.content}>
         <img src={image} alt={title} style={styles.image} />
