@@ -1,15 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { TokenContext } from '../TokenContext';
 
 const MyForm = () => {
   const [file, setFile] = useState(null);
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [audioBlob, setAudioBlob] = useState(null);
-  // const { token } = useContext(TokenContext);
+  const [isRecording, setIsRecording] = useState(false);
+  const [music, setMusic] = useState('');
+
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const audioRef = useRef(null);
 
   const { token, setToken } = useContext(TokenContext);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -30,12 +35,14 @@ const MyForm = () => {
 
     setToken(storedToken || '');
     console.log('Token set in CreateForm:', storedToken);
-    setLoading(false);
   }, [setToken]);
-
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
   };
 
   const handleDescriptionChange = (e) => {
@@ -47,12 +54,51 @@ const MyForm = () => {
   };
 
   const handleVoiceRecording = () => {
-    console.log('Voice recording started');
+    if (!isRecording) {
+      startRecording();
+    } else {
+      stopRecording();
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        setAudioBlob(audioBlob);
+        const audioURL = window.URL.createObjectURL(audioBlob);
+        if (audioRef.current) {
+          audioRef.current.src = audioURL;
+        }
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      console.log('Recording started');
+    } catch (error) {
+      console.error('Error accessing the microphone', error);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      console.log('Recording stopped');
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted', { file, description, searchQuery, audioBlob });
+    console.log('Form submitted', { file, title, description, music, audioBlob });
   };
 
   const getSong = async () => {
@@ -61,11 +107,10 @@ const MyForm = () => {
       return;
     }
 
-    // Extract trackId from searchQuery (assuming it’s a Spotify URL)
     const parts = searchQuery.split('/');
     const trackId = parts[parts.length - 1];
     console.log("here is the trackId:", trackId);
-    
+
     if (!token) {
       console.log('token is missing');
       return;
@@ -80,9 +125,10 @@ const MyForm = () => {
           },
         }
       );
-      
+
       const data = await response.json();
-      console.log('Spotify Track Data:', data);
+      const { preview_url } = data;
+      setMusic(preview_url);
     } catch (error) {
       console.error('Error fetching the track:', error);
     }
@@ -93,6 +139,13 @@ const MyForm = () => {
       <h1>Create Form</h1>
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} />
+        <br />
+        <input
+          type="title"
+          value={title}
+          onChange={handleTitleChange}
+          placeholder="Title"
+        />
         <br />
         <textarea
           value={description}
@@ -108,13 +161,18 @@ const MyForm = () => {
             placeholder="Enter the Spotify link"
           />
           <button type="button" onClick={getSong}>
-            Submit Spotify Link
+            Add Song
           </button>
         </div>
+
         <button type="button" onClick={handleVoiceRecording}>
-          Record Voice
+          {isRecording ? 'Stop Recording' : 'Record Voice'}
         </button>
         <br />
+
+        <audio ref={audioRef} controls />
+        <br />
+
         <button type="submit">Create</button>
       </form>
     </div>
