@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { TokenContext } from '../TokenContext';
+import React, { useState, useEffect, useRef } from 'react';
 
 const MyForm = () => {
+  const [accessToken, setAccessToken] = useState('')
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -15,28 +15,32 @@ const MyForm = () => {
   const audioChunksRef = useRef([]);
   const audioRef = useRef(null);
 
-  const { token, setToken } = useContext(TokenContext);
-
   useEffect(() => {
-    const hash = window.location.hash;
-    let storedToken = window.localStorage.getItem('token');
-
-    if (!storedToken && hash) {
-      const tokenParam = hash
-        .substring(1)
-        .split('&')
-        .find((elem) => elem.startsWith('access_token'));
-
-      if (tokenParam) {
-        storedToken = tokenParam.split('=')[1];
-        window.localStorage.setItem('token', storedToken);
-        window.location.hash = ''; // Clear hash from URL
+    const authParams = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&client_id=${process.env.REACT_APP_SPOTIFY_CLIENT_ID}&client_secret=${process.env.REACT_APP_SPOTIFY_CLIENT_SECRET}`
+    }
+    fetch('https://accounts.spotify.com/api/token', authParams)
+      .then(res => res.json())
+      .then(data => setAccessToken(data.access_token));
+  }, []);
+ 
+  const search = async () => {
+    const songParams = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
       }
     }
 
-    setToken(storedToken || '');
-    console.log('Token set in CreateForm:', storedToken);
-  }, [setToken]);
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${searchQuery}&type=track`, songParams);
+    const result = await response.json();
+    setMusic(result.tracks.items[0].preview_url);
+  }
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -181,44 +185,6 @@ const MyForm = () => {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log('Form submitted', { file, title, description, music, audioBlob });
-  // };
-
-  const getSong = async () => {
-    if (!searchQuery) {
-      console.log('Search query is empty');
-      return;
-    }
-
-    const parts = searchQuery.split('/');
-    const trackId = parts[parts.length - 1];
-    console.log("here is the trackId:", trackId);
-
-    if (!token) {
-      console.log('token is missing');
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `https://api.spotify.com/v1/tracks/${trackId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-      const { preview_url } = data;
-      setMusic(preview_url);
-    } catch (error) {
-      console.error('Error fetching the track:', error);
-    }
-  };
-
   return (
     <div>
       <h1>Create Form</h1>
@@ -245,8 +211,8 @@ const MyForm = () => {
             onChange={handleSearchQueryChange}
             placeholder="Enter the Spotify link"
           />
-          <button type="button" onClick={getSong}>
-            Add Song
+          <button type="button" onClick={search}>
+            Search Song
           </button>
         </div>
 
