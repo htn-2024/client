@@ -9,6 +9,7 @@ const MyForm = () => {
   const [audioBlob, setAudioBlob] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [music, setMusic] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
@@ -61,6 +62,93 @@ const MyForm = () => {
     }
   };
 
+  // Function to upload the file
+  const uploadFile = async () => {
+    if (!file) {
+      alert('Please select a file first');
+      return null;
+    }
+
+    // const formData = new FormData();
+    // formData.append('file', file);
+
+    console.log('we have just created formData', file);
+
+    try {
+      const response = await fetch('http://localhost:4000/upload', {
+        method: 'POST',
+        body: file,
+      });
+
+      if (!response.ok) {
+        console.log('File upload failed, line 86 ---------');
+        throw new Error('File upload failed');
+      }
+
+      const result = await response;
+      console.log("result is typeof", typeof(result));
+      console.log('File uploaded successfully:', result);
+
+      // Assuming the response contains a file URL or ID
+      return result;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      return null;
+    }
+  };
+
+  // Function to create memory object
+  const createMemory = async (fileUrl) => {
+    const memoryData = {
+      title,
+      description,
+      music,
+      recordingFileId: fileUrl, // Use the uploaded file's URL or ID
+      // audioBlob, // You can send additional data like audio if needed
+    };
+
+    console.log("here is the memory data", memoryData);
+
+    try {
+      const response = await fetch('http://localhost:4000/memory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(memoryData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Memory creation failed');
+      }
+
+      const result = await response.json();
+      console.log('Memory created successfully:', result);
+    } catch (error) {
+      console.error('Error creating memory:', error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsUploading(true);
+
+    // Step 1: Upload the file and get the file URL or ID
+    const fileUrl = await uploadFile();
+    if (!fileUrl) {
+      alert('File upload failed. Please try again.');
+      setIsUploading(false);
+      return;
+    }
+
+    // Step 2: Create memory object with the file URL
+    await createMemory(fileUrl);
+
+    setIsUploading(false);
+    alert('Memory created successfully!');
+  };
+
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -96,10 +184,10 @@ const MyForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted', { file, title, description, music, audioBlob });
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log('Form submitted', { file, title, description, music, audioBlob });
+  // };
 
   const getSong = async () => {
     if (!searchQuery) {
