@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './landingPage.css';
-import { ReactComponent as Framey } from '../images/frameyLanding.svg';
+import { ReactComponent as FrameyLaunch } from '../images/frameyLanding.svg';
+
 
 const LandingPage = () => {
   return (
@@ -10,12 +11,10 @@ const LandingPage = () => {
       <p className='landing-copy sub-text'>
         Immersive Gallery of <span className='blue'>Memories</span>, Curated by <span className='blue'>You</span>
       </p>
-      <div>
-        <Link to="/login">
-          <button className="btn text">login</button>
-        </Link>
-        <Framey />
-      </div>
+      <Link to="/login">
+        <button className="btn text">login</button>
+      </Link>
+      <FrameyLaunch className='framey'/>
     </div>
   );
 }
