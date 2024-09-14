@@ -1,0 +1,19 @@
+.recording {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.record-button {
+  padding: 6px 24px;
+  color: white;
+  background: #2262CF;
+  border-color: transparent;
+  border-radius: 48px;
+
+  &:hover {
+    cursor: pointer;
+    background: #1f58bb;
+  }
+}

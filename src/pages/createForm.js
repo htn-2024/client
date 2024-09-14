@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import './createForm.css';
+import frameyCreate from '../images/frameyCreate.svg';
+import UploadFile from '../components/uploadFile.js';
+import TextInput from '../components/textInput.js';
+import TextArea from '../components/textArea.js';
+import SearchDropdown from '../components/searchDropdown.js';
+import VoiceRecording from '../components/voiceRecording.js';
 
 const MyForm = () => {
   const [accessToken, setAccessToken] = useState('')
@@ -6,14 +13,11 @@ const MyForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [options, setOptions] = useState([]);
   const [audioBlob, setAudioBlob] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
   const [music, setMusic] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-
-  const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]);
-  const audioRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const authParams = {
@@ -27,20 +31,30 @@ const MyForm = () => {
       .then(res => res.json())
       .then(data => setAccessToken(data.access_token));
   }, []);
- 
-  const search = async () => {
-    const songParams = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
-      }
-    }
 
-    const response = await fetch(`https://api.spotify.com/v1/search?q=${searchQuery}&type=track`, songParams);
-    const result = await response.json();
-    setMusic(result.tracks.items[0].preview_url);
-  }
+  useEffect(() => {
+    if (!accessToken) return;
+    const fetchSongs = async () => {
+      const songParams = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }
+
+      const response = await fetch(`https://api.spotify.com/v1/search?q=${searchQuery}&type=track`, songParams);
+      const result = await response.json();
+      const options = result?.tracks?.items?.filter((track) => track.preview_url).map((track) => (
+        { label: track.name, value: track.preview_url }
+      ));
+      setOptions(options);
+      setIsDropdownOpen(true);
+    }
+    const debounceTimeout = setTimeout(fetchSongs, 300);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [searchQuery, accessToken]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -52,18 +66,6 @@ const MyForm = () => {
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
-  };
-
-  const handleSearchQueryChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleVoiceRecording = () => {
-    if (!isRecording) {
-      startRecording();
-    } else {
-      stopRecording();
-    }
   };
 
   // Function to upload the file
@@ -90,9 +92,10 @@ const MyForm = () => {
       return null;
     }
   };
-
+  console.log(music);
   // Function to create memory object
   const createMemory = async (mediaFileId, recordingFileId) => {
+    console.log(music);
     const memoryData = {
       title,
       description,
@@ -150,82 +153,41 @@ const MyForm = () => {
     window.location.href = '/gallery';
   };
 
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      audioChunksRef.current = [];
-
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data);
-      };
-
-      mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        setAudioBlob(audioBlob);
-        const audioURL = window.URL.createObjectURL(audioBlob);
-        if (audioRef.current) {
-          audioRef.current.src = audioURL;
-        }
-      };
-
-      mediaRecorderRef.current.start();
-      setIsRecording(true);
-      console.log('Recording started');
-    } catch (error) {
-      console.error('Error accessing the microphone', error);
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      console.log('Recording stopped');
-    }
-  };
-
   return (
-    <div>
-      <h1>Create Form</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} />
-        <br />
-        <input
-          type="title"
-          value={title}
-          onChange={handleTitleChange}
-          placeholder="Title"
-        />
-        <br />
-        <textarea
-          value={description}
-          onChange={handleDescriptionChange}
-          placeholder="Enter description"
-        />
-        <br />
-        <div>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchQueryChange}
-            placeholder="Enter the Spotify link"
+    <div className="container">
+      <section className="header">
+        <h1 className="blue sub-text">Create Exhibit</h1>
+        <img src={frameyCreate} alt="frameyCreate" height={200}/>
+      </section>
+      <form onSubmit={handleSubmit} className="form">
+        <UploadFile file={file} handleFileChange={handleFileChange}/>
+        <div className="inputs">
+          <TextInput
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="Title"
           />
-          <button type="button" onClick={search}>
-            Search Song
-          </button>
+      
+          <TextArea
+            value={description}
+            onChange={handleDescriptionChange}
+            placeholder="Enter description"
+          />
+  
+          <div>
+            <SearchDropdown
+              options={options}
+              label={searchQuery}
+              setLabel={setSearchQuery}
+              placeholder="Search for a song..."
+              isDropdownOpen={!music && isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+              setValue={setMusic}
+            />
+          </div>
+          <VoiceRecording setAudioBlob={setAudioBlob} />
         </div>
-
-        <button type="button" onClick={handleVoiceRecording}>
-          {isRecording ? 'Stop Recording' : 'Record Voice'}
-        </button>
-        <br />
-
-        <audio ref={audioRef} controls />
-        <br />
-
-        <button type="submit">Create</button>
+        <button type="submit" className="submit text">Create</button>
       </form>
     </div>
   );

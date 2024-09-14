@@ -1,0 +1,20 @@
+.file-input {
+  display: none;
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  width: 40%;
+  height: 60vh;
+  background: #E2E2E2;
+  border-radius: 4px;
+
+  &:hover {
+    cursor: pointer;
+    background: #cdcdcd;
+  }
+}

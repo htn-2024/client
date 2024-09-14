@@ -1,0 +1,45 @@
+.container {
+  padding: 20px 72px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blue {
+  color: #2262CF;
+  font-size: 48px;
+  margin-top: 6px;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.submit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 60px 100px;
+  padding: 6px 24px;
+  border-color: transparent;
+  border-radius: 48px;
+  color: white;
+  background: #CB785C;
+
+  &:hover {
+    cursor: pointer;
+    background: #b16850;
+  }
+}
