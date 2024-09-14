@@ -63,17 +63,7 @@ const MyForm = () => {
   };
 
   // Function to upload the file
-  const uploadFile = async () => {
-    if (!file) {
-      alert('Please select a file first');
-      return null;
-    }
-
-    // const formData = new FormData();
-    // formData.append('file', file);
-
-    console.log('we have just created formData', file);
-
+  const uploadFile = async (file) => {
     try {
       const response = await fetch('http://localhost:4000/upload', {
         method: 'POST',
@@ -98,12 +88,13 @@ const MyForm = () => {
   };
 
   // Function to create memory object
-  const createMemory = async (fileId) => {
+  const createMemory = async (mediaFileId, recordingFileId) => {
     const memoryData = {
       title,
       description,
       music,
-      recordingFileId: fileId, // Use the uploaded file's URL or ID
+      mediaFileId,
+      recordingFileId, // Use the uploaded file's URL or ID
       // audioBlob, // You can send additional data like audio if needed
     };
 
@@ -134,15 +125,21 @@ const MyForm = () => {
     setIsUploading(true);
 
     // Step 1: Upload the file and get the file URL or ID
-    const fileId = await uploadFile();
-    if (!fileId) {
-      alert('File upload failed. Please try again.');
+    const mediaFileId = await uploadFile(file);
+    if (!mediaFileId) {
+      alert('Media file upload failed. Please try again.');
       setIsUploading(false);
       return;
     }
 
+    const recordingFileId = await uploadFile(audioBlob);
+    if (!recordingFileId) {
+      alert('Recording file id failed. Please try again.');
+      setIsUploading(false);
+      return;
+    }
     // Step 2: Create memory object with the file URL
-    await createMemory(fileId);
+    await createMemory(mediaFileId, recordingFileId);
 
     setIsUploading(false);
     alert('Memory created successfully!');
