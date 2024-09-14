@@ -1,0 +1,36 @@
+.landing-page {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-title {
+    justify-content: center;
+    font-size: 144px;
+    font-style: normal;
+    font-weight: 700;
+    margin: 136px 88px 0px 72px;
+}
+
+.landing-copy {
+    font-size: 56px;
+    margin: 16px 88px 0px 72px;
+}
+
+.btn {
+    margin-top: 32px;
+    border-radius: 48px;
+    background: #000;
+    font-size: 32px;
+    color: white;
+    border: 8px;
+    padding: 8px 40px;
+    justify-content: left;
+    margin: 40px 88px 0px 72px;
+}
+
+.blue {
+    color: #2262CF;
+    font-weight: bold
+}
