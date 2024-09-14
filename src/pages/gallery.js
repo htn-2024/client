@@ -2,31 +2,32 @@ import React from "react";
 import MemoryTile from "../components/memoryTile";
 
 const Gallery = () => {
-  // Initialize with an empty array
   const [tilesData, setTilesData] = React.useState([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [editingTile, setEditingTile] = React.useState(null);
 
-  React.useEffect(() => {
-    async function getTilesData() {
-      try {
-        const response = await fetch("http://localhost:4000/memory");
-        const data = await response.json();
-        console.log("here is the data", data);
-        // Ensure the data is an array before setting state
-        if (Array.isArray(data.memories)) {
-          setTilesData(data.memories);
-        } else {
-          console.error("Error: Data is not an array", data);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  // Fetch the tiles data from the server
+  const getTilesData = React.useCallback(async () => {
+    try {
+      const response = await fetch("http://localhost:4000/memory");
+      const data = await response.json();
+      console.log("Fetched updated tilesData", data);
+      if (Array.isArray(data.memories)) {
+        setTilesData(data.memories);
+      } else {
+        console.error("Error: Data is not an array", data);
       }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-    getTilesData();
-    console.log("tilesData", tilesData);
   }, []);
 
+  // Initial fetch of tiles data
+  React.useEffect(() => {
+    getTilesData();
+  }, [getTilesData]);
+
+  // Logging updated tilesData
   React.useEffect(() => {
     console.log("Updated tilesData:", tilesData);
   }, [tilesData]);
@@ -51,14 +52,11 @@ const Gallery = () => {
       );
 
       if (response.ok) {
-        const updatedMemory = await response.json();
-        setTilesData((prevTilesData) =>
-          prevTilesData.map((tile) =>
-            tile._id === editingTile._id ? { ...tile, ...updatedMemory } : tile
-          )
-        );
+        console.log("Memory updated successfully");
         setIsModalOpen(false);
         setEditingTile(null);
+        // Re-fetch updated tiles data after the edit
+        await getTilesData();
       } else {
         console.error("Failed to update memory");
       }
@@ -73,9 +71,13 @@ const Gallery = () => {
         method: "DELETE",
       });
       if (response.ok) {
+        console.log("Memory deleted successfully");
         // Remove the deleted tile from the state
-        setTilesData(tilesData.filter((tile) => tile._id !== id));
-        console.log("tilesData has been deleted", tilesData);
+        setTilesData((prevTilesData) =>
+          prevTilesData.filter((tile) => tile._id !== id)
+        );
+      } else {
+        console.error("Failed to delete memory");
       }
     } catch (error) {
       console.error("Error deleting memory:", error);
@@ -92,7 +94,6 @@ const Gallery = () => {
         Create Memory
       </button>
       <div style={styles.galleryContainer}>
-        {/* Conditional rendering to ensure tilesData is an array before mapping */}
         {Array.isArray(tilesData) && tilesData.length > 0 ? (
           tilesData.map((tile) => (
             <MemoryTile
@@ -108,10 +109,10 @@ const Gallery = () => {
             />
           ))
         ) : (
-          <p>No memories found.</p> // Add a message or loading state
+          <p>No memories found.</p>
         )}
       </div>
-      {isModalOpen && (
+      {isModalOpen && editingTile && (
         <div style={styles.modal}>
           <div style={styles.modalContent}>
             <h2>Edit Memory</h2>
