@@ -29,8 +29,19 @@ const Gallery = () => {
     alert(`Edit tile with ID: ${id}`);
   };
 
-  const handleDelete = (id) => {
-    alert(`Delete tile with ID: ${id}`);
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:4000/memory/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        // Remove the deleted tile from the state
+        setTilesData(tilesData.filter(tile => tile._id !== id));
+        console.log("tilesData has been deleted", tilesData);
+      }
+    } catch (error) {
+      console.error('Error deleting memory:', error);
+    }
   };
 
   const handleCreateMemory = () => {
@@ -52,8 +63,8 @@ const Gallery = () => {
               description={tile.description}
               image={tile.mediaUrl}
               audio={tile.recordingUrl}
-              onEdit={() => handleEdit(tile.id)}
-              onDelete={() => handleDelete(tile.id)}
+              onEdit={() => handleEdit(tile._id)}
+              onDelete={() => handleDelete(tile._id)}
             />
           ))
         ) : (
