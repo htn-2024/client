@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const MemoryTile = ({ title, description, image, onEdit, onDelete }) => {
+const MemoryTile = ({ title, description, image, audio, onEdit, onDelete }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
