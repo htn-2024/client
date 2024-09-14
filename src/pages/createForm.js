@@ -85,12 +85,12 @@ const MyForm = () => {
         throw new Error('File upload failed');
       }
 
-      const result = await response;
+      const result = await response.json();
       console.log("result is typeof", typeof(result));
       console.log('File uploaded successfully:', result);
 
       // Assuming the response contains a file URL or ID
-      return result;
+      return result.storageId;
     } catch (error) {
       console.error('Error uploading file:', error);
       return null;
@@ -98,12 +98,12 @@ const MyForm = () => {
   };
 
   // Function to create memory object
-  const createMemory = async (fileUrl) => {
+  const createMemory = async (fileId) => {
     const memoryData = {
       title,
       description,
       music,
-      recordingFileId: fileUrl, // Use the uploaded file's URL or ID
+      recordingFileId: fileId, // Use the uploaded file's URL or ID
       // audioBlob, // You can send additional data like audio if needed
     };
 
@@ -134,15 +134,15 @@ const MyForm = () => {
     setIsUploading(true);
 
     // Step 1: Upload the file and get the file URL or ID
-    const fileUrl = await uploadFile();
-    if (!fileUrl) {
+    const fileId = await uploadFile();
+    if (!fileId) {
       alert('File upload failed. Please try again.');
       setIsUploading(false);
       return;
     }
 
     // Step 2: Create memory object with the file URL
-    await createMemory(fileUrl);
+    await createMemory(fileId);
 
     setIsUploading(false);
     alert('Memory created successfully!');
