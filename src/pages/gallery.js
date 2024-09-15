@@ -2,9 +2,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import MemoryTile from "../components/memoryTile";
 import Dropdown from "../components/dropdown";
 import TextInput from "../components/textInput";
-import { ReactComponent as FrameyGallery } from '../images/frameyGallery.svg';
-import './gallery.css';
-import AddIcon from '@mui/icons-material/Add';
+import TextArea from "../components/textArea";
+import { ReactComponent as FrameyGallery } from "../images/frameyGallery.svg";
+import "./gallery.css";
+import AddIcon from "@mui/icons-material/Add";
 
 const Gallery = () => {
   const [collectionsData, setCollectionsData] = useState([]);
@@ -17,12 +18,15 @@ const Gallery = () => {
 
   const getCollectionsData = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/collection`);
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/collection`
+      );
       const data = await response.json();
       if (Array.isArray(data.collections)) {
-        const options = data.collections.map((collection) => (
-          { label: collection.name, value: collection._id }
-        ))
+        const options = data.collections.map((collection) => ({
+          label: collection.name,
+          value: collection._id,
+        }));
         setCollectionsData(options);
       } else {
         console.error("Error: Data is not an array", data);
@@ -34,9 +38,13 @@ const Gallery = () => {
 
   // Fetch the tiles data from the server
   const getTilesData = useCallback(async (collection) => {
-    console.log(collection)
+    console.log(collection);
     try {
-      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/memory${collection?.value ? "/" + collection.value : ""}`);
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/memory${
+          collection?.value ? "/" + collection.value : ""
+        }`
+      );
       const data = await response.json();
       console.log("Fetched updated tilesData", data);
       if (Array.isArray(data.memories)) {
@@ -50,7 +58,7 @@ const Gallery = () => {
   }, []);
 
   useEffect(() => {
-    getCollectionsData()
+    getCollectionsData();
   }, [getCollectionsData]);
 
   useEffect(() => {
@@ -85,7 +93,7 @@ const Gallery = () => {
         console.log("Memory updated successfully");
         setIsModalOpen(false);
         setEditingTile(null);
-        setOpenDropdownId(null);  // Close the dropdown
+        setOpenDropdownId(null); // Close the dropdown
         // Re-fetch updated tiles data after the edit
         await getTilesData();
       } else {
@@ -96,12 +104,14 @@ const Gallery = () => {
     }
   };
 
-
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/memory/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/memory/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.ok) {
         console.log("Memory deleted successfully");
         // Remove the deleted tile from the state
@@ -118,13 +128,13 @@ const Gallery = () => {
 
   const handleNewCollectionChange = (e) => {
     setNewCollection(e.target.value);
-  }
+  };
 
   const handleCreateCollection = async () => {
     await fetch(`${process.env.REACT_APP_SERVER_URL}/collection`, {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ name: newCollection }),
     });
@@ -156,20 +166,18 @@ const Gallery = () => {
             variant="transparent"
           />
         </div>
-        <button className='add-button text' onClick={handleCreateCollection}>
-          <AddIcon className='add-icon' />
+        <button className="add-button text" onClick={handleCreateCollection}>
+          <AddIcon className="add-icon" />
           New Collection
         </button>
-        <button className='add-button log text' onClick={handleCreateMemory}>
-          <AddIcon className='add-icon' />
+        <button className="add-button log text" onClick={handleCreateMemory}>
+          <AddIcon className="add-icon" />
           Log memory
         </button>
       </div>
-      <div className='header'>
-        <FrameyGallery/>
-        <h1 className='sub-text'>
-          Welcome to your Memory Museum!
-        </h1>
+      <div className="header">
+        <FrameyGallery />
+        <h1 className="sub-text">Welcome to your Memory Museum!</h1>
       </div>
       <div style={styles.galleryContainer}>
         {Array.isArray(tilesData) && tilesData.length > 0 ? (
@@ -185,7 +193,9 @@ const Gallery = () => {
               onEdit={() => handleEdit(tile)}
               onDelete={() => handleDelete(tile._id)}
               isDropdownOpen={openDropdownId === tile._id}
-              setDropdownOpen={(isOpen) => setOpenDropdownId(isOpen ? tile._id : null)}
+              setDropdownOpen={(isOpen) =>
+                setOpenDropdownId(isOpen ? tile._id : null)
+              }
             />
           ))
         ) : (
@@ -195,73 +205,58 @@ const Gallery = () => {
       {isModalOpen && editingTile && (
         <div style={styles.modal}>
           <div style={styles.modalContent}>
-            <h2>Edit Memory</h2>
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="title">Title:</label>
-              <input
-                id="title"
-                type="text"
-                value={editingTile.title}
-                onChange={(e) =>
+            <div style={styles.modalBody}>
+              {/* Left side: Image */}
+              <div style={styles.imageContainer}>
+                <img
+                  src={editingTile.mediaUrl} // Display the image
+                  alt={editingTile.title}
+                  style={styles.sideImage}
+                />
+              </div>
+
+              {/* Right side: Form Fields */}
+              <div style={styles.formContainer}>
+                <h2>Edit Memory</h2>
+                <form onSubmit={handleSubmit} className="form">
+                  <div className="inputs">
+                    <TextInput
+                      value={editingTile.title} // Pre-populated with the memory's title
+                      onChange={(e) =>
                   setEditingTile({ ...editingTile, title: e.target.value })
                 }
-              />
-              <br />
-              <label htmlFor="description">Description:</label>
-              <textarea
-                id="description"
-                value={editingTile.description}
-                onChange={(e) =>
+                      placeholder="Title"
+                    />
+
+                    <TextArea
+                      value={editingTile.description} // Pre-populated with the memory's description
+                      onChange={(e) =>
                   setEditingTile({
                     ...editingTile,
                     description: e.target.value,
                   })
                 }
-              />
-              <br />
-              <label htmlFor="spotifyLink">Spotify Link:</label>
-              <input
-                id="spotifyLink"
-                type="text"
-                value={editingTile.spotifyLink}
-                onChange={(e) =>
-                  setEditingTile({
-                    ...editingTile,
-                    spotifyLink: e.target.value,
-                  })
-                }
-              />
-              <br />
-              <label htmlFor="fileLink">File Link:</label>
-              <input
-                id="fileLink"
-                type="text"
-                value={editingTile.fileLink}
-                onChange={(e) =>
-                  setEditingTile({ ...editingTile, fileLink: e.target.value })
-                }
-              />
-              <br />
-              <button 
-                type="submit"
-                onClick={async (e) => {
-                  await handleSubmit(e);
-                  setIsModalOpen(false);
-                  setEditingTile(null);
-                }}
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setEditingTile(null);
-                }}
-              >
-                Cancel
-              </button>
-            </form>
+                      placeholder="Enter description"
+                    />
+                  </div>
+
+                  {/* Bottom right: Update button */}
+                  <div style={styles.buttonContainer}>
+                    <button
+                      type="submit"
+                      className="submit text"
+                      onClick={async (e) => {
+                        await handleSubmit(e);
+                        setIsModalOpen(false);
+                        setEditingTile(null);
+                      }}
+                    >
+                      Update
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -304,8 +299,17 @@ const styles = {
     alignItems: "center",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: "#E2E2E2",
     padding: "20px",
     borderRadius: "5px",
   },
+  sideImage: {
+    width: "200px",
+  },
+  modalBody: {
+    display: "flex",
+    flexDirection: "row",
+    spaceBetween: "10px",
+  },
 };
+
