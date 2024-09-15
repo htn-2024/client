@@ -35,7 +35,7 @@ export default MemoryTile;
 const styles = {
   tile: {
     border: '1px solid #ddd',
-    borderRadius: '8px',
+    borderRadius: '16px',
     padding: '8px 16px',
     position: 'relative',
     width: '300px',

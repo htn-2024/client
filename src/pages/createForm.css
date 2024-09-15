@@ -27,7 +27,7 @@
 }
 
 .framey-create:hover {
-  animation: bounce 1s ease;
+  animation: bounce 2s ease;
 }
 
 @media (max-width: 750px), (max-height: 848px) {
