@@ -20,14 +20,14 @@
   position: absolute;
   top: 0px;
   right: 0px;
-  left: calc(100% - 152px);
+  left: calc(100% - 250px);
   width: 104px;
   height: auto;
   transition: transform 0.3s ease;
 }
 
 .framey-create:hover {
-  animation: bounce 1s ease;
+  animation: bounce 2s ease;
 }
 
 @media (max-width: 750px), (max-height: 848px) {
@@ -38,9 +38,10 @@
 
 .cancel-icon {
   position: absolute;
-  top: 40px;
+  top: 0px;
   right: 40px;
   width: 24px;
+  color: black;
 }
 
 .form {

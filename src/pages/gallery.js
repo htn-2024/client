@@ -233,7 +233,7 @@ const Gallery = () => {
 
               {/* Right side: Form Fields */}
               <div style={styles.formContainer}>
-                <h2>Edit Memory</h2>
+                <h2 className='edit-title sub-text'>Edit memory exhibit</h2>
                 <form onSubmit={handleSubmit} className="form">
                   <div className="inputs">
                     <TextInput
@@ -315,16 +315,20 @@ const styles = {
     alignItems: "center",
   },
   modalContent: {
-    backgroundColor: "#E2E2E2",
+    backgroundColor: "#F0EFE9",
     padding: "20px",
     borderRadius: "5px",
     height: "350px",
     flexDirection: "column",
     display: "flex",
     justifyContent: "center",
+    borderRadius: "16px"
   },
   sideImage: {
     width: "200px",
+    borderRadius: "8px",
+    margin: "16px",
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   modalBody: {
     display: "flex",
