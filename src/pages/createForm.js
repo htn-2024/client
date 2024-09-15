@@ -6,6 +6,7 @@ import TextInput from '../components/textInput.js';
 import TextArea from '../components/textArea.js';
 import SearchDropdown from '../components/searchDropdown.js';
 import VoiceRecording from '../components/voiceRecording.js';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const MyForm = () => {
   const [accessToken, setAccessToken] = useState('')
@@ -66,6 +67,10 @@ const MyForm = () => {
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
+  };
+
+  const handleCancel = (e) => {
+    window.location.href = '/gallery';
   };
 
   // Function to upload the file
@@ -155,9 +160,10 @@ const MyForm = () => {
 
   return (
     <div className="container">
+      <CancelIcon className='cancel-icon' onClick={handleCancel}/>
       <section className="header">
         <h1 className="blue sub-text">Create Exhibit</h1>
-        <img src={frameyCreate} alt="frameyCreate" className='framey' height={200}/>
+        <img src={frameyCreate} alt="framey cartoon mascot" className='framey-create' height={200}/>
       </section>
       <form onSubmit={handleSubmit} className="form">
         <UploadFile file={file} handleFileChange={handleFileChange}/>

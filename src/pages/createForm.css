@@ -7,6 +7,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .blue {
@@ -48,8 +49,39 @@
   }
 }
 
-.framey {
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+.framey-create {
   position: absolute;
-  top: 450px;
+  top: 456px;
+  left: 992px;
   height: auto;
+  transition: transform 0.3s ease;
+}
+
+.framey-create:hover {
+  animation: bounce 1s ease;
+}
+
+@media (max-width: 1032px), (max-height: 848px) {
+  .framey-create {
+      display: none;
+  }
+}
+
+.cancel-icon {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 24px;
 }
