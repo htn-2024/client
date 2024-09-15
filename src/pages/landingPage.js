@@ -12,7 +12,7 @@ const LandingPage = () => {
         Immersive Gallery of <span className='blue'>Memories</span>, Curated by <span className='blue'>You</span>
       </p>
       <Link to="/login">
-        <button className="btn text">login</button>
+        <button className="btn text">start</button>
       </Link>
       <FrameyLaunch className='framey'/>
     </div>

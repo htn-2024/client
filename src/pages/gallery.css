@@ -1,0 +1,40 @@
+.log-mem-btn {
+    border-radius: 48px;
+    background: #CB785C;
+    font-size: 16px;
+    color: white;
+    border: 3px solid transparent;
+    padding: 8px 16px;
+    position: absolute;
+    right: 24px;
+    justify-content: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;  
+    transition: all 0.3s ease;
+    font-weight: bold
+}
+
+.log-mem-btn:hover {
+    background: transparent;
+    color: #CB785C;
+    border-color: #CB785C;
+}
+
+.add-icon {
+    margin: -2px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    color: #2262CF;
+    font-size: 24px;
+    margin-top: 16px;
+    gap: 16px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
+    justify-content: left;
+}

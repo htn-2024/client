@@ -1,5 +1,8 @@
 import React from "react";
 import MemoryTile from "../components/memoryTile";
+import { ReactComponent as FrameyGallery } from '../images/frameyGallery.svg';
+import './gallery.css';
+import AddIcon from '@mui/icons-material/Add';
 
 const Gallery = () => {
   const [tilesData, setTilesData] = React.useState([]);
@@ -93,9 +96,16 @@ const Gallery = () => {
 
   return (
     <div style={styles.galleryPage}>
-      <button style={styles.createButton} onClick={handleCreateMemory}>
-        Create Memory
+      <button className='log-mem-btn text' onClick={handleCreateMemory}>
+        <AddIcon className='add-icon' />
+        Log memory
       </button>
+      <div className='header'>
+        <FrameyGallery/>
+        <h1 className='sub-text'>
+          Welcome to your Memory Museum!
+        </h1>
+      </div>
       <div style={styles.galleryContainer}>
         {Array.isArray(tilesData) && tilesData.length > 0 ? (
           tilesData.map((tile) => (
@@ -234,4 +244,3 @@ const styles = {
     borderRadius: "5px",
   },
 };
-

@@ -25,16 +25,36 @@
     background: #000;
     font-size: 32px;
     color: white;
-    border: 8px;
+    border: 3px solid transparent;
     padding: 8px 40px;
     justify-content: left;
     margin: 40px 96px 0px 72px;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background: transparent;
+    color: black;
+    border-color:black;
 }
 
 .blue {
     color: #2262CF;
-    font-weight: bold
+    font-weight: bold;
 }
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-30px);
+    }
+    60% {
+      transform: translateY(-15px);
+    }
+  }
 
 .framey {
     position: absolute;
@@ -42,7 +62,12 @@
     right: 56px;
     width: 300px;
     height: auto;
+    transition: transform 0.3s ease;
 }
+
+.framey:hover {
+    animation: bounce 1s ease;
+  }
 
 @media (max-width: 1032px), (max-height: 848px) {
     .framey {
