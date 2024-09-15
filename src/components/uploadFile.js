@@ -23,8 +23,8 @@ const UploadFile = ({ file, handleFileChange }) => {
           <img src={previewUrl} alt="uploaded file" height="100%"/>
         ) : (
           <>
-            <img src={upload} alt="upload icon" />
-            <div className="text">Upload a file...</div>
+            <img src={upload} alt="upload icon" className='upload-icon'/>
+            <div className="text">Click to upload a file...</div>
           </>
         )}
       </label>

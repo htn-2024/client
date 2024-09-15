@@ -16,10 +16,39 @@
   margin-top: 6px;
 }
 
+.framey-create {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: calc(100% - 152px);
+  width: 104px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.framey-create:hover {
+  animation: bounce 1s ease;
+}
+
+@media (max-width: 750px), (max-height: 848px) {
+  .framey-create {
+      display: none;
+  }
+}
+
+.cancel-icon {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 24px;
+}
+
 .form {
+  margin-top: 32px;
   display: flex;
   flex-direction: row;
   gap: 48px;
+  justify-content: center;
 }
 
 .inputs {
@@ -28,12 +57,17 @@
   gap: 24px;
 }
 
+.upload-icon {
+  animation: bounce 2s ease;
+  animation-iteration-count: 4;
+}
+
 .submit {
-  position: absolute;
+  align-self: flex-end;
   bottom: 0;
   right: 0;
-  margin: 60px 100px;
   padding: 6px 24px;
+  margin-top: 104px;
   border: 3px solid transparent;
   border-radius: 48px;
   color: white;
@@ -59,29 +93,4 @@
   60% {
     transform: translateY(-15px);
   }
-}
-
-.framey-create {
-  position: absolute;
-  top: 456px;
-  left: 992px;
-  height: auto;
-  transition: transform 0.3s ease;
-}
-
-.framey-create:hover {
-  animation: bounce 1s ease;
-}
-
-@media (max-width: 1032px), (max-height: 848px) {
-  .framey-create {
-      display: none;
-  }
-}
-
-.cancel-icon {
-  position: absolute;
-  top: 40px;
-  right: 40px;
-  width: 24px;
 }
