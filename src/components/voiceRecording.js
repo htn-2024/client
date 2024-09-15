@@ -19,7 +19,7 @@ const VoiceRecording = ({ setAudioBlob }) => {
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/mpeg' });
         setAudioBlob(audioBlob);
         const audioURL = window.URL.createObjectURL(audioBlob);
         if (audioRef.current) {
