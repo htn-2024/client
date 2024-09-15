@@ -33,13 +33,23 @@
   right: 0;
   margin: 60px 100px;
   padding: 6px 24px;
-  border-color: transparent;
+  border: 3px solid transparent;
   border-radius: 48px;
   color: white;
   background: #CB785C;
+  font-weight: bold;
+  transition: all 0.3s ease;
 
   &:hover {
     cursor: pointer;
-    background: #b16850;
+    background: transparent;
+    color:#CB785C;
+    border-color: #CB785C;
   }
+}
+
+.framey {
+  position: absolute;
+  top: 450px;
+  height: auto;
 }

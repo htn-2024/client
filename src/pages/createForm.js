@@ -157,7 +157,7 @@ const MyForm = () => {
     <div className="container">
       <section className="header">
         <h1 className="blue sub-text">Create Exhibit</h1>
-        <img src={frameyCreate} alt="frameyCreate" height={200}/>
+        <img src={frameyCreate} alt="frameyCreate" className='framey' height={200}/>
       </section>
       <form onSubmit={handleSubmit} className="form">
         <UploadFile file={file} handleFileChange={handleFileChange}/>
