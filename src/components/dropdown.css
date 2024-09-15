@@ -1,14 +1,28 @@
-.input {
-  position: relative;
+.dropdown-toggle {
+  cursor: pointer;
   border: 0;
-  padding: 8px 12px;
-  width: 500px;
   border-radius: 4px;
+  background-color: #FFF;
+  height: 32px;
+  width: 100%;
+  padding: 0 12px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.close-icon {
+  margin-left: auto;
+}
+
+.transparent {
+  background: transparent;
 }
 
 .options {
   position: absolute;
-  max-height: 200px;
   width: 500px;
   overflow-y: scroll;
   list-style: none;

@@ -1,19 +1,42 @@
-import React from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import MemoryTile from "../components/memoryTile";
+import Dropdown from "../components/dropdown";
+import TextInput from "../components/textInput";
 import { ReactComponent as FrameyGallery } from '../images/frameyGallery.svg';
 import './gallery.css';
 import AddIcon from '@mui/icons-material/Add';
 
 const Gallery = () => {
-  const [tilesData, setTilesData] = React.useState([]);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [editingTile, setEditingTile] = React.useState(null);
-  const [openDropdownId, setOpenDropdownId] = React.useState(null);
+  const [collectionsData, setCollectionsData] = useState([]);
+  const [collection, setCollection] = useState(null);
+  const [newCollection, setNewCollection] = useState("");
+  const [tilesData, setTilesData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTile, setEditingTile] = useState(null);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+
+  const getCollectionsData = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/collection`);
+      const data = await response.json();
+      if (Array.isArray(data.collections)) {
+        const options = data.collections.map((collection) => (
+          { label: collection.name, value: collection._id }
+        ))
+        setCollectionsData(options);
+      } else {
+        console.error("Error: Data is not an array", data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
 
   // Fetch the tiles data from the server
-  const getTilesData = React.useCallback(async () => {
+  const getTilesData = useCallback(async (collection) => {
+    console.log(collection)
     try {
-      const response = await fetch("http://localhost:4000/memory");
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/memory${collection?.value ? "/" + collection.value : ""}`);
       const data = await response.json();
       console.log("Fetched updated tilesData", data);
       if (Array.isArray(data.memories)) {
@@ -26,13 +49,16 @@ const Gallery = () => {
     }
   }, []);
 
-  // Initial fetch of tiles data
-  React.useEffect(() => {
-    getTilesData();
-  }, [getTilesData]);
+  useEffect(() => {
+    getCollectionsData()
+  }, [getCollectionsData]);
+
+  useEffect(() => {
+    getTilesData(collection);
+  }, [getTilesData, collection]);
 
   // Logging updated tilesData
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("Updated tilesData:", tilesData);
   }, [tilesData]);
 
@@ -45,7 +71,7 @@ const Gallery = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:4000/memory/${editingTile._id}`,
+        `${process.env.REACT_APP_SERVER_URL}/memory/${editingTile._id}`,
         {
           method: "PUT",
           headers: {
@@ -73,7 +99,7 @@ const Gallery = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:4000/memory/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/memory/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {
@@ -90,16 +116,55 @@ const Gallery = () => {
     }
   };
 
+  const handleNewCollectionChange = (e) => {
+    setNewCollection(e.target.value);
+  }
+
+  const handleCreateCollection = async () => {
+    await fetch(`${process.env.REACT_APP_SERVER_URL}/collection`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: newCollection }),
+    });
+    setNewCollection("");
+    getCollectionsData();
+  };
+
   const handleCreateMemory = () => {
     window.location.href = "/create-memory";
   };
 
   return (
     <div style={styles.galleryPage}>
-      <button className='log-mem-btn text' onClick={handleCreateMemory}>
-        <AddIcon className='add-icon' />
-        Log memory
-      </button>
+      <div className="gallery-options">
+        <div className="collection-input">
+          <Dropdown
+            options={collectionsData}
+            selected={collection}
+            setSelected={setCollection}
+            placeholder="Filter by collection..."
+            variant="transparent"
+          />
+        </div>
+        <div className="collection-input">
+          <TextInput
+            value={newCollection}
+            onChange={handleNewCollectionChange}
+            placeholder="Create a new collection..."
+            variant="transparent"
+          />
+        </div>
+        <button className='add-button text' onClick={handleCreateCollection}>
+          <AddIcon className='add-icon' />
+          New Collection
+        </button>
+        <button className='add-button log text' onClick={handleCreateMemory}>
+          <AddIcon className='add-icon' />
+          Log memory
+        </button>
+      </div>
       <div className='header'>
         <FrameyGallery/>
         <h1 className='sub-text'>
