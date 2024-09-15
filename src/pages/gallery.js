@@ -260,7 +260,7 @@ const Gallery = () => {
                   <div style={styles.buttonContainer}>
                     <button
                       type="submit"
-                      className="submit text"
+                      className="update text"
                       onClick={async (e) => {
                         await handleSubmit(e);
                         setIsModalOpen(false);
@@ -318,6 +318,10 @@ const styles = {
     backgroundColor: "#E2E2E2",
     padding: "20px",
     borderRadius: "5px",
+    height: "350px",
+    flexDirection: "column",
+    display: "flex",
+    justifyContent: "center",
   },
   sideImage: {
     width: "200px",
@@ -325,7 +329,13 @@ const styles = {
   modalBody: {
     display: "flex",
     flexDirection: "row",
-    spaceBetween: "10px",
+    spaceBetween: "15px",
+    marginRight: "30px",
   },
+  buttonContainer: {
+    display: "absolute",
+    flexDirection: "column",
+    justifyContent: "flex-bottom",
+  }
 };
 
