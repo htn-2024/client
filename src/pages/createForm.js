@@ -222,8 +222,9 @@ const MyForm = () => {
             />
           </div>
           <VoiceRecording setAudioBlob={setAudioBlob} />
+          <button type="submit" className="submit text">Create</button>
+
         </div>
-        <button type="submit" className="submit text">Create</button>
       </form>
     </div>
   );
