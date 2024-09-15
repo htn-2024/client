@@ -127,3 +127,24 @@
 #root > div > div:nth-child(4) > div > div > div:nth-child(2) {
     margin-left: 20px;
 }
+
+.update {
+    align-self: flex-end;
+    bottom: 0;
+    right: 0;
+    padding: 6px 24px;
+    margin-top: 140px;
+    border: 3px solid transparent;
+    border-radius: 48px;
+    color: white;
+    background: #CB785C;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  
+    &:hover {
+      cursor: pointer;
+      background: transparent;
+      color:#CB785C;
+      border-color: #CB785C;
+    }
+  }

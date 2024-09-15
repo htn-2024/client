@@ -214,13 +214,11 @@ const MyForm = () => {
             onChange={handleTitleChange}
             placeholder="Title"
           />
-      
           <TextArea
             value={description}
             onChange={handleDescriptionChange}
             placeholder="Enter description"
           />
-  
           <div>
             <SearchDropdown
               options={options}
