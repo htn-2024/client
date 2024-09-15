@@ -158,29 +158,36 @@ const Gallery = () => {
   return (
     <div style={styles.galleryPage}>
       <div className="gallery-options">
-        <div className="collection-input">
+        <div className="collection-filter text">
           <Dropdown
             options={collectionsData}
             selected={collection}
             setSelected={setCollection}
-            placeholder="Filter by collection..."
+            placeholder="Filter by collection"
             variant="transparent"
           />
         </div>
-        <div className="collection-input">
-          <TextInput
-            value={newCollection}
-            onChange={handleNewCollectionChange}
-            placeholder="Create a new collection..."
-            variant="transparent"
-          />
+        <div className='collection'>
+        <button className='collection-btn text' onClick={handleCreateCollection}>
+            <AddIcon className='add-icon' />
+            New Collection
+          </button>
+          <div className="collection-input">
+            <TextInput
+              value={newCollection}
+              onChange={handleNewCollectionChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleCreateCollection(e);
+                }
+              }}
+              placeholder="Input new collection..."
+              variant="transparent"
+            />
+          </div>
         </div>
-        <button className="add-button text" onClick={handleCreateCollection}>
-          <AddIcon className="add-icon" />
-          New Collection
-        </button>
-        <button className="add-button log text" onClick={handleCreateMemory}>
-          <AddIcon className="add-icon" />
+        <button className='add-button log-mem-btn text' onClick={handleCreateMemory}>
+          <AddIcon className='add-icon' />
           Log memory
         </button>
       </div>
@@ -188,7 +195,7 @@ const Gallery = () => {
         <FrameyGallery />
         <h1 className="sub-text">Welcome to your Memory Museum!</h1>
       </div>
-      <div style={styles.galleryContainer}>
+      <div className='mem-tile' style={styles.galleryContainer}>
         {Array.isArray(tilesData) && tilesData.length > 0 ? (
           tilesData.map((tile) => (
             <MemoryTile

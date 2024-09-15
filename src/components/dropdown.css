@@ -1,16 +1,17 @@
 .dropdown-toggle {
   cursor: pointer;
   border: 0;
-  border-radius: 4px;
+  border-radius: 48px;
   background-color: #FFF;
   height: 32px;
   width: 100%;
-  padding: 0 12px;
+  padding: 8px 4px;
   text-align: left;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  font-size: 16px;
 }
 
 .close-icon {
@@ -31,6 +32,7 @@
   padding-inline-start: 0;
   margin-top: 8px;
   z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .option {
