@@ -157,6 +157,14 @@ const MyForm = () => {
   };
 
   const handleSubmit = async (e) => {
+  /**
+   * Handles the form submission by:
+   * 1. Uploading the selected media file and get the file URL or ID.
+   * 2. Uploading the recorded audio blob and get the file URL or ID.
+   * 3. Creating a new memory object with the file URLs and additional data.
+   * 4. Redirecting the user to the gallery page after successful creation.
+   * @param {Event} e The form submission event.
+   */
     e.preventDefault();
     setIsUploading(true);
 

@@ -53,3 +53,27 @@
     width: 100%;
     justify-content: left;
 }
+
+.save {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 30px 60px;
+    padding: 6px 24px;
+    border-color: transparent;
+    border-radius: 20px;
+    color: white;
+    background: #CB785C;
+
+    &:hover {
+      cursor: pointer;
+      background: #b16850;
+    }
+  }
+
+  .gal {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: min-content;
+  }
