@@ -76,7 +76,7 @@
     width: 175px;
     margin-right: 20px;
     border-radius: 8px;
-    padding: 0px 8px 0px 0px;
+    padding: 0px 24px 0px 0px;
 
     &:hover {
         background-color: lightgrey;
@@ -102,7 +102,7 @@
 
 .add-icon {
     margin: -2px;
-    width: 8px;
+    width: 16px;
 }
 
 .header {
