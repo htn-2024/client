@@ -1,12 +1,17 @@
-.log-mem-btn {
+.gallery-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+}
+
+.add-button {
     border-radius: 48px;
     background: #CB785C;
     font-size: 16px;
     color: white;
     border: 3px solid transparent;
     padding: 8px 16px;
-    position: absolute;
-    right: 24px;
     justify-content: left;
     display: flex;
     align-items: center;
@@ -16,10 +21,19 @@
     font-weight: bold
 }
 
-.log-mem-btn:hover {
+.add-button:hover {
     background: transparent;
     color: #CB785C;
     border-color: #CB785C;
+}
+
+.log {
+    margin-left: auto;
+}
+
+.collection-input {
+    width: 175px;
+    margin-right: 20px;
 }
 
 .add-icon {
