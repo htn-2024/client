@@ -195,8 +195,8 @@ const MyForm = () => {
         onClose={() => setIsSnackbarOpen(false)}
         message={snackbarMessage}
       />
-      <CancelIcon className='cancel-icon' onClick={handleCancel}/>
       <section className="header">
+        <CancelIcon className='cancel-icon' onClick={handleCancel}/>
         <h1 className="blue sub-text">Create Exhibit</h1>
         <img src={frameyCreate} alt="framey cartoon mascot" className='framey-create' height={200}/>
       </section>
@@ -204,6 +204,7 @@ const MyForm = () => {
         <UploadFile file={file} handleFileChange={handleFileChange}/>
         <div className="inputs">        
           <Dropdown
+            className='select-collection'
             options={collectionsData}
             selected={collection}
             setSelected={setCollection}
