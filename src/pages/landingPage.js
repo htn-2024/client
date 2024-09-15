@@ -11,7 +11,7 @@ const LandingPage = () => {
       <p className='landing-copy sub-text'>
         Immersive Gallery of <span className='blue'>Memories</span>, Curated by <span className='blue'>You</span>
       </p>
-      <Link to="/login">
+      <Link to="/gallery">
         <button className="btn text">start</button>
       </Link>
       <FrameyLaunch className='framey'/>
