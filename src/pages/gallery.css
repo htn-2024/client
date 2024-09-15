@@ -148,3 +148,8 @@
       border-color: #CB785C;
     }
   }
+
+  .edit-title {
+    font-size: 32px;
+    margin-top: -16px;
+  }

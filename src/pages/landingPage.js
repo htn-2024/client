@@ -7,7 +7,7 @@ import { ReactComponent as FrameyLaunch } from '../images/frameyLanding.svg';
 const LandingPage = () => {
   return (
     <div className="landing-page">
-      <h1 className="project-title text">MEMO FLASHBACK</h1>
+      <h1 className="project-title text">FLASHBACK</h1>
       <p className='landing-copy sub-text'>
         Immersive Gallery of <span className='blue'>Memories</span>, Curated by <span className='blue'>You</span>
       </p>
