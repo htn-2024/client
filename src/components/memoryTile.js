@@ -77,15 +77,19 @@ const styles = {
     cursor: 'pointer',
     borderRadius: '4px',
   },
+  borderRadius: '4px',
+  color: '#CB785C',
   dropdownItemRed: {
     padding: '4px 12px 8px 12px',
     width: '100%',
     border: 'none',
+    borderRadius: '4px',
     backgroundColor: '#fff',
     textAlign: 'left',
     cursor: 'pointer',
-    borderRadius: '4px',
-    color: '#CB785C',
+    '&:hover': {
+      backgroundColor: '#e9e9e9',
+    },
   },
   content: {
     marginTop: '-24px',
