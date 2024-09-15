@@ -5,7 +5,8 @@ import TextInput from "../components/textInput";
 import TextArea from "../components/textArea";
 import { ReactComponent as FrameyGallery } from "../images/frameyGallery.svg";
 import "./gallery.css";
-import AddIcon from "@mui/icons-material/Add";
+import { CircularProgress } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 const Gallery = () => {
   const [collectionsData, setCollectionsData] = useState([]);
@@ -15,8 +16,10 @@ const Gallery = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTile, setEditingTile] = useState(null);
   const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getCollectionsData = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_SERVER_URL}/collection`
@@ -34,11 +37,12 @@ const Gallery = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setIsLoading(false);
   }, []);
 
   // Fetch the tiles data from the server
   const getTilesData = useCallback(async (collection) => {
-    console.log(collection);
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_SERVER_URL}/memory${
@@ -55,6 +59,7 @@ const Gallery = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -145,6 +150,10 @@ const Gallery = () => {
   const handleCreateMemory = () => {
     window.location.href = "/create-memory";
   };
+
+  if (isLoading) {
+    return <div className="spinner"><CircularProgress /></div>
+  }
 
   return (
     <div style={styles.galleryPage}>

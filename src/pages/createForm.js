@@ -8,6 +8,7 @@ import TextArea from '../components/textArea.js';
 import SearchDropdown from '../components/searchDropdown.js';
 import VoiceRecording from '../components/voiceRecording.js';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { Snackbar } from '@mui/material';
 
 const MyForm = () => {
   const [collectionsData, setCollectionsData] = useState([]);
@@ -22,6 +23,8 @@ const MyForm = () => {
   const [music, setMusic] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const getCollectionsData = useCallback(async () => {
     try {
@@ -164,27 +167,34 @@ const MyForm = () => {
     // Step 1: Upload the file and get the file URL or ID
     const mediaFileId = await uploadFile(file);
     if (!mediaFileId) {
-      alert('Media file upload failed. Please try again.');
+      setSnackbarMessage('Media file upload failed. Please try again.');
       setIsUploading(false);
+      setIsSnackbarOpen(true);
       return;
     }
 
     const recordingFileId = await uploadFile(audioBlob);
     if (!recordingFileId) {
-      alert('Recording file id failed. Please try again.');
+      setSnackbarMessage('Recording file id failed. Please try again.');
       setIsUploading(false);
+      setIsSnackbarOpen(true);
       return;
     }
     // Step 2: Create memory object with the file URL
     await createMemory(mediaFileId, recordingFileId);
 
     setIsUploading(false);
-    alert('Memory created successfully!');
     window.location.href = '/gallery';
   };
 
   return (
     <div className="container">
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setIsSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
       <CancelIcon className='cancel-icon' onClick={handleCancel}/>
       <section className="header">
         <h1 className="blue sub-text">Create Exhibit</h1>
