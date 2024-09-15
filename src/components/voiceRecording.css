@@ -9,11 +9,16 @@
   padding: 6px 24px;
   color: white;
   background: #2262CF;
-  border-color: transparent;
   border-radius: 48px;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  font-weight: bold;
+  transition: all 0.3s ease;
 
   &:hover {
     cursor: pointer;
-    background: #1f58bb;
+    background: transparent;
+    color: #2262CF;
+    border-color: #2262CF;
   }
 }
