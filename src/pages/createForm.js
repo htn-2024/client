@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './createForm.css';
 import frameyCreate from '../images/frameyCreate.svg';
 import UploadFile from '../components/uploadFile.js';
+import Dropdown from '../components/dropdown.js';
 import TextInput from '../components/textInput.js';
 import TextArea from '../components/textArea.js';
 import SearchDropdown from '../components/searchDropdown.js';
 import VoiceRecording from '../components/voiceRecording.js';
 
 const MyForm = () => {
+  const [collectionsData, setCollectionsData] = useState([]);
+  const [collection, setCollection] = useState(null);
   const [accessToken, setAccessToken] = useState('')
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
@@ -18,6 +21,23 @@ const MyForm = () => {
   const [music, setMusic] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const getCollectionsData = useCallback(async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/collection`);
+      const data = await response.json();
+      if (Array.isArray(data.collections)) {
+        const options = data.collections.map((collection) => (
+          { label: collection.name, value: collection._id }
+        ))
+        setCollectionsData(options);
+      } else {
+        console.error("Error: Data is not an array", data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
 
   useEffect(() => {
     const authParams = {
@@ -31,6 +51,10 @@ const MyForm = () => {
       .then(res => res.json())
       .then(data => setAccessToken(data.access_token));
   }, []);
+
+  useEffect(() => {
+    getCollectionsData();
+  }, [getCollectionsData]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -71,7 +95,7 @@ const MyForm = () => {
   // Function to upload the file
   const uploadFile = async (file) => {
     try {
-      const response = await fetch('http://localhost:4000/upload', {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/upload`, {
         method: 'POST',
         body: file,
       });
@@ -108,7 +132,7 @@ const MyForm = () => {
     console.log("here is the memory data", memoryData);
 
     try {
-      const response = await fetch('http://localhost:4000/memory', {
+      const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/memory`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -161,7 +185,13 @@ const MyForm = () => {
       </section>
       <form onSubmit={handleSubmit} className="form">
         <UploadFile file={file} handleFileChange={handleFileChange}/>
-        <div className="inputs">
+        <div className="inputs">        
+          <Dropdown
+            options={collectionsData}
+            selected={collection}
+            setSelected={setCollection}
+            placeholder="Select a collection..."
+          />
           <TextInput
             value={title}
             onChange={handleTitleChange}
