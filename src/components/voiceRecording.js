@@ -12,6 +12,7 @@ const VoiceRecording = ({ setAudioBlob }) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
+      console.log(mediaRecorderRef.current);
       audioChunksRef.current = [];
 
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -19,7 +20,7 @@ const VoiceRecording = ({ setAudioBlob }) => {
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/mpeg' });
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         setAudioBlob(audioBlob);
         const audioURL = window.URL.createObjectURL(audioBlob);
         if (audioRef.current) {
