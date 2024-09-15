@@ -121,11 +121,12 @@ const MyForm = () => {
       return null;
     }
   };
-  console.log(music);
+ 
   // Function to create memory object
   const createMemory = async (mediaFileId, recordingFileId) => {
     console.log(music);
     const memoryData = {
+      collectionId: collection.value,
       title,
       description,
       music,
