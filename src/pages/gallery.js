@@ -188,7 +188,7 @@ const Gallery = () => {
         </div>
         <button className='add-button log-mem-btn text' onClick={handleCreateMemory}>
           <AddIcon className='add-icon' />
-          Log memory
+          Add memory
         </button>
       </div>
       <div className="header">
@@ -233,7 +233,7 @@ const Gallery = () => {
 
               {/* Right side: Form Fields */}
               <div style={styles.formContainer}>
-                <h2 className='edit-title sub-text'>Edit memory exhibit</h2>
+                <h2 className='edit-title sub-text'>Edit Memory Exhibit</h2>
                 <form onSubmit={handleSubmit} className="form">
                   <div className="inputs">
                     <TextInput

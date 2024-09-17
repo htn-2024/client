@@ -9,7 +9,7 @@ const LandingPage = () => {
     <div className="landing-page">
       <h1 className="project-title text">FLASHBACK</h1>
       <p className='landing-copy sub-text'>
-        Immersive Gallery of <span className='blue'>Memories</span>, Curated by <span className='blue'>You</span>
+        Immersive Museum of <span className='blue'>Memories</span>, Curated by <span className='blue'>You</span>
       </p>
       <Link to="/gallery">
         <button className="btn text">start</button>
